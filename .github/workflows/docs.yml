@@ -15,8 +15,8 @@ jobs:
     outputs:
       artifact-id: ${{ steps.upload-doc.outputs.artifact-id }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: 3.13
       - name: Build and Install
@@ -27,14 +27,14 @@ jobs:
           sphinx-build docs docs/_build
       - name: Archive documentation
         id: upload-doc
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: documentation
           path: docs/_build
   preview-publish:
     if: ${{ github.event_name == 'pull_request' && github.event.action != 'closed' }}
     needs: build
-    uses: ecmwf/reusable-workflows/.github/workflows/pr-preview-publish.yml@main
+    uses: ecmwf/reusable-workflows/.github/workflows/pr-preview-publish.yml@6bb439f3a1f1f053e862993b0814e50db3eec1c9 # main
     with:
       artifact-id: ${{ needs.build.outputs.artifact-id }}
       space: docs
@@ -45,7 +45,7 @@ jobs:
       sites-token: ${{ secrets.ECMWF_SITES_DOCS_DEV_SECTION_TOKEN }}
   preview-unpublish:
     if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
-    uses: ecmwf/reusable-workflows/.github/workflows/pr-preview-unpublish.yml@main
+    uses: ecmwf/reusable-workflows/.github/workflows/pr-preview-unpublish.yml@6bb439f3a1f1f053e862993b0814e50db3eec1c9 # main
     with:
       space: docs
       name: dev-section
@@ -60,7 +60,7 @@ jobs:
         github.ref_type == 'tag'
       ) }}
     needs: build
-    uses: ecmwf/reusable-workflows/.github/workflows/docs-publish.yml@main
+    uses: ecmwf/reusable-workflows/.github/workflows/docs-publish.yml@6bb439f3a1f1f053e862993b0814e50db3eec1c9 # main
     with:
       artifact-id: ${{ needs.build.outputs.artifact-id }}
       space: docs
